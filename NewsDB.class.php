@@ -8,7 +8,7 @@ class NewsDB implements INewsDB {
     public function __construct() {
         $this->_db = new SQLite3(self::DB_NAME);
 
-        if ( is_file(self::DB_NAME) && (0 == self::DB_NAME) ) {
+        if ( !file_exists(self::DB_NAME) && 0 == self::DB_NAME) {
             $sql = 'CREATE TABLE msgs(
                         id INTEGER PRIMARY KEY AUTOINCREMENT,	title TEXT,
                         category INTEGER,
@@ -46,8 +46,18 @@ class NewsDB implements INewsDB {
         }
     }
 
+    //public function saveNews($title) {
     public function saveNews($title, $category, $description, $source) {
-        // TODO: Implement saveNews() method.
+        $result = [];
+        $dt = time();
+
+        $sql = "INSERT INTO msgs (title, category, description, source, datetime)
+                  VALUES ('$title', '$category', '$description', '$source', '$dt')";
+        $this->_db->exec($sql) or die($this->_db->lastErrorMsg());
+
+
+
+
     }
 
     public function getNews() {

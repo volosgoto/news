@@ -15,7 +15,7 @@ interface INewsDB{
 	 *	@return boolean - результат успех/ошибка
 	*/
 	function saveNews($title, $category, $description, $source);
-	
+
     /**
 	 *	Выборка всех записей из новостной ленты
 	 *	

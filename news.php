@@ -1,5 +1,10 @@
 <?php
-
+require_once 'NewsDB.class.php';
+$news = new NewsDB();
+$errMsg = '';
+    if ("POST" == $_SERVER['REQUEST_METHOD'] && isset($_POST['submit'])) {
+        require_once 'save_news.inc.php';
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,7 +15,7 @@
 <body>
   <h1>Последние новости</h1>
   <?php
-
+        echo $errMsg . '<hr>';
   ?>
   <form action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
     Заголовок новости:<br />
@@ -27,7 +32,7 @@
     Источник:<br />
     <input type="text" name="source" /><br />
     <br />
-    <input type="submit" value="Добавить!" />
+    <input type="submit" name="submit" value="Добавить!" />
 </form>
 <?php
 
