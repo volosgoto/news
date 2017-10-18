@@ -8,7 +8,7 @@ class NewsDB implements INewsDB {
     public function __construct() {
         $this->_db = new SQLite3(self::DB_NAME);
 
-        if ( !file_exists(self::DB_NAME) && 0 == self::DB_NAME) {
+        if (!file_exists(self::DB_NAME) && 0 == self::DB_NAME) {
             $sql = 'CREATE TABLE msgs(
                         id INTEGER PRIMARY KEY AUTOINCREMENT,	title TEXT,
                         category INTEGER,
@@ -30,7 +30,7 @@ class NewsDB implements INewsDB {
                         UNION SELECT 2 AS id, \'Культура\' AS name
                         UNION SELECT 3 AS id, \'Спорт\' AS name 
                         ';
-            $this->_db->exec($sql)or die($this->_db->lastErrorMsg());
+            $this->_db->exec($sql) or die($this->_db->lastErrorMsg());
         }
     }
 
@@ -46,18 +46,29 @@ class NewsDB implements INewsDB {
         }
     }
 
-    //public function saveNews($title) {
     public function saveNews($title, $category, $description, $source) {
-        $result = [];
         $dt = time();
-
         $sql = "INSERT INTO msgs (title, category, description, source, datetime)
                   VALUES ('$title', '$category', '$description', '$source', '$dt')";
         $this->_db->exec($sql) or die($this->_db->lastErrorMsg());
+    }
+
+    public function displayNews() {
+        $resultArr = [];
+        $sql = "SELECT title, category, description, source, datetime 
+                  FROM msgs 
+                  WHERE 1";
+        $result = $this->_db->query($sql);
+      //  $row = $result->fetchArray(SQLITE3_ASSOC);
+        //$row = $result->fetch
 
 
-
-
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {//SQLITE3_ASSOC)) {
+            $resultArr[] = $row;
+        }
+        //var_dump($resultArr);
+        //die;
+        return $resultArr;
     }
 
     public function getNews() {
