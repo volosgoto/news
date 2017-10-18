@@ -1,19 +1,20 @@
 <?php
 
-$t = $_POST['title'] ?? '';
+$t = (string)$_POST['title'] ?? '';
 $title = htmlspecialchars(trim($t));
 
-$c = $_POST['category'] ?? '';
+$c = (int)$_POST['category'] ?? '';
 $category = htmlspecialchars(trim($c));
 
-$d = $_POST['description'] ?? '';
+$d = (string)$_POST['description'] ?? '';
 $description = htmlspecialchars(trim($d));
 
-$s = $_POST['source'] ?? '';
+$s = (string)$_POST['source'] ?? '';
 $source = htmlspecialchars(trim($d));
 
+$result = !empty($title) && !empty($category) && !empty($description) && !empty($source);
 
-if ( !empty($title) && !empty($category) && !empty($description) && !empty($source) ) {
+if ( $result ) {
     $news->saveNews($title, $category, $description, $source);
     header("Location: news.php");
 } else {
