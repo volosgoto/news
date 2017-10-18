@@ -1,11 +1,16 @@
 <?php
 
-//print_r($_POST);
-$title = (string)trim($_POST['title']);
-$category = (int)$_POST['category'];
-$description = (string)trim($_POST['description']);
-$source = (string)trim($_POST['source']);
+$t = $_POST['title'] ?? '';
+$title = htmlspecialchars(trim($t));
 
+$c = $_POST['category'] ?? '';
+$category = htmlspecialchars(trim($c));
+
+$d = $_POST['description'] ?? '';
+$description = htmlspecialchars(trim($d));
+
+$s = $_POST['source'] ?? '';
+$source = htmlspecialchars(trim($d));
 
 
 if ( !empty($title) && !empty($category) && !empty($description) && !empty($source) ) {
