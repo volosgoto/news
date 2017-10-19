@@ -16,6 +16,26 @@ $errMsg = '';
   <h1>Последние новости</h1>
   <?php
         echo $errMsg . '<hr>';
+
+  $newsArr = $news->displayNews();
+
+  foreach ($newsArr as $line) {
+      $category = '';
+      switch ($line['category']) {
+          case 1: $category = 'Политика'; break;
+          case 2: $category = 'Культура'; break;
+          case 3: $category = 'Спорт'; break;
+      }
+      $dt = date("d-m-Y : H-i-s", $line['datetime']);
+      echo 'Title: ' . $line['title'] . ' '.
+          'Cetegory:' . $category . ' ' .
+          'Description: ' . $line['description'] . ' ' .
+          'Source: ' .  $line['source'] . ' ' .
+          'Date: ' . $dt;
+      echo PHP_EOL;
+      echo '<hr>';
+    }
+
   ?>
   <form action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
     Заголовок новости:<br />
