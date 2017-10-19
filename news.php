@@ -1,10 +1,16 @@
 <?php
+//print_r($_POST);
 require_once 'NewsDB.class.php';
 $news = new NewsDB();
 $errMsg = '';
     if ("POST" == $_SERVER['REQUEST_METHOD'] && isset($_POST['submit'])) {
         require_once 'save_news.inc.php';
     }
+
+    if ("POST" == $_SERVER['REQUEST_METHOD'] && isset($_POST['deleteById'])) {
+        require_once 'delete_news.inc.php';
+    }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,47 +21,53 @@ $errMsg = '';
 <body>
   <h1>Последние новости</h1>
   <?php
-        echo $errMsg . '<hr>';
-
-  $newsArr = $news->displayNews();
-
-  foreach ($newsArr as $line) {
-      $category = '';
-      switch ($line['category']) {
-          case 1: $category = 'Политика'; break;
-          case 2: $category = 'Культура'; break;
-          case 3: $category = 'Спорт'; break;
-      }
-      $dt = date("d-m-Y : H-i-s", $line['datetime']);
-      echo 'Title: ' . $line['title'] . ' '.
-          'Cetegory:' . $category . ' ' .
-          'Description: ' . $line['description'] . ' ' .
-          'Source: ' .  $line['source'] . ' ' .
-          'Date: ' . $dt;
-      echo PHP_EOL;
-      echo '<hr>';
-    }
-
+        if ($errMsg) {
+            echo '<h3> ' . $errMsg . '</h3>' . '<hr>';
+        }
   ?>
-  <form action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
-    Заголовок новости:<br />
-    <input type="text" name="title" /><br />
-    Выберите категорию:<br />
-    <select name="category">
-      <option value="1">Политика</option>
-      <option value="2">Культура</option>
-      <option value="3">Спорт</option>
-    </select>
-    <br />
-    Текст новости:<br />
-    <textarea name="description" cols="50" rows="5"></textarea><br />
-    Источник:<br />
-    <input type="text" name="source" /><br />
-    <br />
-    <input type="submit" name="submit" value="Добавить!" />
-</form>
-<?php
+  </br>
+<!--Вывод новостей-->
+<!-- Cортировка-->
+TODO Реалиовать сортировку
+  <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST" title="sortNews">
+      Сортировать:<br />
+      <select name="sort">
+          <option value="1">Дате</option>
+          <option value="2"></option>
+          <option value="3">Спорт</option>
+      </select>
+      <input type="submit" name="submitSelect" value="Сортировать!" /> <br />
+  </form>
+  <br />
 
+
+  <?php
+    require_once 'get_news.inc.php';
 ?>
+  <p>
+      Добавить новость!
+  </p>
+  <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST" title="addNews">
+      Заголовок новости:<br />
+      <input type="text" name="title" /><br />
+      Выберите категорию:<br />
+      <select name="category">
+          <option value="1">Политика</option>
+          <option value="2">Культура</option>
+          <option value="3">Спорт</option>
+      </select>
+      <br />
+      Текст новости:<br />
+      <textarea name="description" cols="50" rows="5"></textarea><br />
+      Источник:<br />
+      <input type="text" name="source" />
+      <br />
+      <input type="submit" name="submit" value="Добавить новость!" /> <br />
+      <br />
+      Удалить новость: <br />
+      <input type="number" name="deleteById" value="Номер новости"/> <br />
+      <input type="submit" name="delete" value="Удалить новость!" />
+  </form>
+
 </body>
 </html>

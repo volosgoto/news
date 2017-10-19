@@ -53,32 +53,58 @@ class NewsDB implements INewsDB {
         $this->_db->exec($sql) or die($this->_db->lastErrorMsg());
     }
 
-    public function displayNews() {
-        $resultArr = [];
-        $sql = "SELECT title, category, description, source, datetime 
-                  FROM msgs 
-                  WHERE 1";
-        $result = $this->_db->query($sql);
-      //  $row = $result->fetchArray(SQLITE3_ASSOC);
-        //$row = $result->fetch
-
-
-        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {//SQLITE3_ASSOC)) {
-            $resultArr[] = $row;
+    private function db2arr($data){
+        $arr = [];
+        while ($row = $data->fetchArray(SQLITE3_ASSOC)) {
+            $arr[] = $row;
         }
-        //var_dump($resultArr);
-        //die;
-        return $resultArr;
+        return $arr;
     }
 
     public function getNews() {
-        // TODO: Implement getNews() method.
+        $sql = "SELECT id, title, category, description, source, datetime 
+                  FROM msgs 
+                  WHERE 1 
+                  ORDER BY msgs.id DESC";
+        $result = $this->_db->query($sql);
+        if (!$result) {
+            return false;
+        } else {
+            return $this->db2arr($result);
+        }
     }
 
     public function deleteNews($id) {
-        // TODO: Implement deleteNews() method.
+        $sql = "DELETE FROM msgs WHERE msgs.id = $id";
+        $this->_db->exec($sql) or die($this->_db->lastErrorMsg());
+    }
+
+    public function sortNews($data){ // TODO Реализовать сортировку
+        $sql = '';
+        $a = 'ASC';
+        $d = 'DESC';
+        switch ($data) {
+            // TODO Переписать запросы без *
+            case 'id': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id $a "; break;
+            case 'category': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.category $a "; break;
+            case 'datetime': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.datetime $a "; break;
+            default: $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id $d "; break;
+        }
+        $result = $this->_db->query($sql);
+        if ( !$result ) {
+            return false;
+        } else {
+            return $this->db2arr($result);
+        }
+    }
+
+    public function clearStr($data) {
+        $data = strip_tags(trim($data));
+        return $this->_db->escapeString($data);
+    }
+
+    public function clearInt($data) {
+        return abs( (int)strip_tags(trim($data)) );
+
     }
 }
-
-//$news = new NewsDB();
-//var_dump($news);
