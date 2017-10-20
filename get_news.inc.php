@@ -2,6 +2,7 @@
 
 $posts = $news->getNews();
 
+//print_r($posts);
 foreach ($posts as $line) {
     $category = '';
     switch ($line['category']) {

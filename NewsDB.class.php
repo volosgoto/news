@@ -4,6 +4,7 @@ include_once 'INewsDB.class.php';
 class NewsDB implements INewsDB {
     const DB_NAME = '../news.db'; // db path
     private $_db;
+    private $sortData;
 
     public function __construct() {
         $this->_db = new SQLite3(self::DB_NAME);
@@ -62,41 +63,33 @@ class NewsDB implements INewsDB {
     }
 
     public function getNews() {
-        $sql = "SELECT id, title, category, description, source, datetime 
-                  FROM msgs 
-                  WHERE 1 
-                  ORDER BY msgs.id DESC";
+//        $sql = "SELECT id, title, category, description, source, datetime
+//                  FROM msgs
+//                  WHERE 1
+//                  ORDER BY msgs.id DESC";
+        $sql = $this->sortData;
         $result = $this->_db->query($sql);
         if (!$result) {
             return false;
         } else {
+            $this->sortData = $this->db2arr($result);
             return $this->db2arr($result);
         }
-    }
-
-    public function deleteNews($id) {
-        $sql = "DELETE FROM msgs WHERE msgs.id = $id";
-        $this->_db->exec($sql) or die($this->_db->lastErrorMsg());
     }
 
     public function sortNews($data){ // TODO Реализовать сортировку
-        $sql = '';
-        $a = 'ASC';
-        $d = 'DESC';
+        // TODO Не распознает POST id сортировки
+
+        $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id ASC";
         switch ($data) {
             // TODO Переписать запросы без *
-            case 'id': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id $a "; break;
-            case 'category': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.category $a "; break;
-            case 'datetime': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.datetime $a "; break;
-            default: $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id $d "; break;
+            case 'new': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id DESC"; break;
+            case 'old': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id ASC "; break;
+            //case 'datetime': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.datetime DESC "; break;
         }
-        $result = $this->_db->query($sql);
-        if ( !$result ) {
-            return false;
-        } else {
-            return $this->db2arr($result);
-        }
+            return $this->sortData = $sql;
     }
+
 
     public function clearStr($data) {
         $data = strip_tags(trim($data));
@@ -106,5 +99,10 @@ class NewsDB implements INewsDB {
     public function clearInt($data) {
         return abs( (int)strip_tags(trim($data)) );
 
+    }
+
+    public function deleteNews($id) {
+        $sql = "DELETE FROM msgs WHERE msgs.id = $id";
+        $this->_db->exec($sql) or die($this->_db->lastErrorMsg());
     }
 }

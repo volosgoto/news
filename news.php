@@ -1,8 +1,10 @@
 <?php
-//print_r($_POST);
 require_once 'NewsDB.class.php';
 $news = new NewsDB();
+require_once 'sort_news.inc.php';
+
 $errMsg = '';
+
     if ("POST" == $_SERVER['REQUEST_METHOD'] && isset($_POST['submit'])) {
         require_once 'save_news.inc.php';
     }
@@ -10,7 +12,6 @@ $errMsg = '';
     if ("POST" == $_SERVER['REQUEST_METHOD'] && isset($_POST['deleteById'])) {
         require_once 'delete_news.inc.php';
     }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,27 +22,29 @@ $errMsg = '';
 <body>
   <h1>Последние новости</h1>
   <?php
-        if ($errMsg) {
-            echo '<h3> ' . $errMsg . '</h3>' . '<hr>';
-        }
+    if ($errMsg) {
+        echo '<h3> ' . $errMsg . '</h3>' . '<hr>';
+    }
   ?>
   </br>
+
 <!--Вывод новостей-->
 <!-- Cортировка-->
-TODO Реалиовать сортировку
   <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST" title="sortNews">
       Сортировать:<br />
       <select name="sort">
-          <option value="1">Дате</option>
-          <option value="2"></option>
-          <option value="3">Спорт</option>
+          <option selected value="new">Новые</option>
+          <option value="old">Старые</option>
+<!--          <option value="category">Категории</option>-->
       </select>
       <input type="submit" name="submitSelect" value="Сортировать!" /> <br />
   </form>
   <br />
 
-
   <?php
+
+  //echo 'POST: ', print_r($_POST);
+  echo '<br />';
     require_once 'get_news.inc.php';
 ?>
   <p>
