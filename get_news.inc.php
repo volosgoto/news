@@ -22,7 +22,7 @@ foreach ($posts as $line) {
         '<p>' . 'Новость №: ' . $line['id'] . ' ' . '</p>' .
         '<p class="font-weight-light">' . $line['description'] . '</p> ' . '' .
         'Источник: ' . $line['source'] . ' ' .
-        '<p class="font-italic">' . 'Добвлено: ' . $dt . '</p>';
+        '<p class="font-italic">' . 'Добавлено: ' . $dt . '</p>';
     echo PHP_EOL;
     echo '<hr>';
 }
