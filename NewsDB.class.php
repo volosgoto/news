@@ -9,7 +9,7 @@ class NewsDB implements INewsDB {
     public function __construct() {
         $this->_db = new SQLite3(self::DB_NAME);
 
-        if (!file_exists(self::DB_NAME) && 0 == self::DB_NAME) {
+        if ( !file_exists(self::DB_NAME) && 0 == self::DB_NAME ) {
             $sql = 'CREATE TABLE msgs(
                         id INTEGER PRIMARY KEY AUTOINCREMENT,	title TEXT,
                         category INTEGER,
@@ -63,10 +63,6 @@ class NewsDB implements INewsDB {
     }
 
     public function getNews() {
-//        $sql = "SELECT id, title, category, description, source, datetime
-//                  FROM msgs
-//                  WHERE 1
-//                  ORDER BY msgs.id DESC";
         $sql = $this->sortData;
         $result = $this->_db->query($sql);
         if (!$result) {
@@ -77,15 +73,11 @@ class NewsDB implements INewsDB {
         }
     }
 
-    public function sortNews($data){ // TODO Реализовать сортировку
-        // TODO Не распознает POST id сортировки
-
+    public function sortNews($data){
         $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id ASC";
         switch ($data) {
-            // TODO Переписать запросы без *
             case 'new': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id DESC"; break;
             case 'old': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.id ASC "; break;
-            //case 'datetime': $sql = "SELECT * FROM msgs WHERE 1 ORDER BY msgs.datetime DESC "; break;
         }
             return $this->sortData = $sql;
     }
